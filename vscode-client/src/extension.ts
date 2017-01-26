@@ -43,10 +43,9 @@ function startLangServerTCP(addr: number, documentSelector: string | string[]): 
 }
 
 export function activate(context: ExtensionContext) {
-	// let disposable = startLangServer("/Users/gaoce/Github/coala-langserver/coala-langserver.py", ["python"])
-	// context.subscriptions.push(disposable);
+	context.subscriptions.push(startLangServer
+	(require("path").resolve(__dirname, '../coala-langserver.sh'), ["python"]));
+	// For Debug
+	// context.subscriptions.push(startLangServerTCP(2087, ["python"]));
 	console.log("coala language server is running.");
-	// When developing JS/TS, set {"typescript.tsdk": "/dev/null"} in your user settings in the
-	// new VSCode window opened via `npm run vscode`.
-	context.subscriptions.push(startLangServerTCP(2087, ["python"]));
 }
