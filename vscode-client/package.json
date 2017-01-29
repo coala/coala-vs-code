@@ -1,31 +1,33 @@
 {
-	"name": "vscode-client",
-	"description": "VSCode extension for running multiple language servers",
-	"author": "Sourcegraph",
-	"license": "MIT",
-	"version": "0.0.1",
-	"publisher": "sqs",
-	"engines": {
-		"vscode": "^1.4.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"*"
-	],
-	"main": "./out/src/extension",
-	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"vscode": "npm run vscode:prepublish && VSCODE=$(which code-insiders || which code || echo echo ERROR: neither the code nor code-insiders vscode executable is installed); USER=dummy-dont-share-vscode-instance $VSCODE --user-data-dir=$PWD/.vscode-dev/user-data --extensionHomePath=$PWD/.vscode-dev/extensions --extensionDevelopmentPath=$PWD $*"
-	},
-	"devDependencies": {
-		"typescript": "^1.8.9",
-		"vscode": "^0.11.0"
-	},
-	"dependencies": {
-		"vscode-languageclient": "^2.4.2-next.12"
-	}
+    "name": "coala",
+    "displayName": "Coala plugin for VS Code",
+    "description": "VSCode extension for running multiple language servers",
+    "author": "Coala Devs",
+    "license": "MIT",
+    "version": "0.0.8",
+    "publisher": "coala",
+    "engines": {
+        "vscode": "^1.4.0"
+    },
+    "categories": [
+        "Linters"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./out/src/extension",
+    "scripts": {
+        "vscode:prepublish": "cp -r ../coala-langserver.sh ../coala-langserver.py ../coala_langserver ./out && node ./node_modules/vscode/bin/compile",
+        "compile": "python3 ../setup.py install && node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "vscode": "npm run vscode:prepublish && VSCODE=$(which code-insiders || which code || echo echo ERROR: neither the code nor code-insiders vscode executable is installed); USER=dummy-dont-share-vscode-instance $VSCODE --user-data-dir=$PWD/.vscode-dev/user-data --extensionHomePath=$PWD/.vscode-dev/extensions --extensionDevelopmentPath=$PWD $*"
+    },
+    "devDependencies": {
+        "typescript": "^1.8.9",
+        "vscode": "^0.11.0"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^2.4.2-next.12"
+    }
 }
+
