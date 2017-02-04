@@ -4,7 +4,7 @@
     "description": "VSCode extension for running multiple language servers",
     "author": "Coala Devs",
     "license": "MIT",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "publisher": "coala",
     "engines": {
         "vscode": "^1.4.0"
