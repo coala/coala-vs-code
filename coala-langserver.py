@@ -8,4 +8,4 @@ while True:
         langserver.main()
     except Exception as e:
         tb = traceback.format_exc()
-        print("FATAL ERROR: {} {}".format(e, tb))
+        print('FATAL ERROR: {} {}'.format(e, tb))

@@ -31,10 +31,10 @@ class TCPReadWriter(ReadWriter):
 
     def readline(self, *args):
         data = self.reader.readline(*args)
-        return data.decode("utf-8")
+        return data.decode('utf-8')
 
     def read(self, *args):
-        return self.reader.read(*args).decode("utf-8")
+        return self.reader.read(*args).decode('utf-8')
 
     def write(self, out):
         self.writer.write(out.encode())
@@ -52,30 +52,30 @@ class JSONRPC2Connection:
 
     @staticmethod
     def _read_header_content_length(line):
-        if len(line) < 2 or line[-2:] != "\r\n":
-            raise JSONRPC2Error("Line endings must be \\r\\n")
-        if line.startswith("Content-Length: "):
-            _, value = line.split("Content-Length: ")
+        if len(line) < 2 or line[-2:] != '\r\n':
+            raise JSONRPC2Error('Line endings must be \\r\\n')
+        if line.startswith('Content-Length: '):
+            _, value = line.split('Content-Length: ')
             value = value.strip()
             try:
                 return int(value)
             except ValueError:
                 raise JSONRPC2Error(
-                    "Invalid Content-Length header: {}".format(value))
+                    'Invalid Content-Length header: {}'.format(value))
 
     def _receive(self):
         line = self.conn.readline()
-        if line == "":
+        if line == '':
             raise EOFError()
         length = self._read_header_content_length(line)
         # Keep reading headers until we find the sentinel line for the JSON
         # request.
-        while line != "\r\n":
+        while line != '\r\n':
             line = self.conn.readline()
         body = self.conn.read(length)
         obj = json.loads(body)
         # If the next message doesn't have an id, just give it a random key.
-        self._msg_buffer[obj.get("id") or uuid.uuid4()] = obj
+        self._msg_buffer[obj.get('id') or uuid.uuid4()] = obj
 
     def read_message(self, _id=None):
         """Read a JSON RPC message sent over the current connection. If
@@ -92,50 +92,50 @@ class JSONRPC2Connection:
 
     def write_response(self, _id, result):
         body = {
-            "jsonrpc": "2.0",
-            "id": _id,
-            "result": result,
+            'jsonrpc': '2.0',
+            'id': _id,
+            'result': result,
         }
-        body = json.dumps(body, separators=(",", ":"))
+        body = json.dumps(body, separators=(',', ':'))
         content_length = len(body)
         response = (
-            "Content-Length: {}\r\n"
-            "Content-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n"
-            "{}".format(content_length, body))
+            'Content-Length: {}\r\n'
+            'Content-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n'
+            '{}'.format(content_length, body))
         self.conn.write(response)
-        log("RESPONSE: ", response)
+        log('RESPONSE: ', response)
 
     def send_request(self, method: str, params):
         _id = random.randint(0, 2 ** 16)  # TODO(renfred) guarantee uniqueness.
         body = {
-            "jsonrpc": "2.0",
-            "id": _id,
-            "method": method,
-            "params": params,
+            'jsonrpc': '2.0',
+            'id': _id,
+            'method': method,
+            'params': params,
         }
-        body = json.dumps(body, separators=(",", ":"))
+        body = json.dumps(body, separators=(',', ':'))
         content_length = len(body)
         request = (
-            "Content-Length: {}\r\n"
-            "Content-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n"
-            "{}".format(content_length, body))
-        log("SENDING REQUEST: ", request)
+            'Content-Length: {}\r\n'
+            'Content-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n'
+            '{}'.format(content_length, body))
+        log('SENDING REQUEST: ', request)
         self.conn.write(request)
         return self.read_message(_id)
 
     def send_notification(self, method: str, params):
         body = {
-            "jsonrpc": "2.0",
-            "method": method,
-            "params": params,
+            'jsonrpc': '2.0',
+            'method': method,
+            'params': params,
         }
-        body = json.dumps(body, separators=(",", ":"))
+        body = json.dumps(body, separators=(',', ':'))
         content_length = len(body)
         notification = (
-            "Content-Length: {}\r\n"
-            "Content-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n"
-            "{}".format(content_length, body))
-        log("SENDING notification: ", notification)
+            'Content-Length: {}\r\n'
+            'Content-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n'
+            '{}'.format(content_length, body))
+        log('SENDING notification: ', notification)
         self.conn.write(notification)
         return None
 

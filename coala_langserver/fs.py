@@ -1,10 +1,6 @@
-import base64
 import os
 from abc import ABC, abstractmethod
-from functools import lru_cache
 from typing import List
-
-from .jsonrpc import JSONRPC2Connection
 
 
 class FileException(Exception):
@@ -12,7 +8,7 @@ class FileException(Exception):
 
 
 class Entry:
-    """Generic representation of a directory entry."""
+    '""Generic representation of a directory entry.""'
 
     def __init__(self, name, is_dir, size):
         self.name = name
