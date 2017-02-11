@@ -10,4 +10,5 @@ def path_from_uri(uri):
 
 
 def dir_from_uri(uri):
+    """Get the directory name from the path."""
     return os.path.dirname(path_from_uri(uri))
