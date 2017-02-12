@@ -3,7 +3,6 @@ import argparse
 import socketserver
 import traceback
 
-from .fs import LocalFileSystem
 from .jsonrpc import JSONRPC2Connection, ReadWriter, TCPReadWriter
 from .log import log
 from .coalashim import run_coala_with_specific_file
@@ -32,8 +31,6 @@ class LangServer(JSONRPC2Connection):
     def __init__(self, conn=None):
         super().__init__(conn=conn)
         self.root_path = None
-        self.symbol_cache = None
-        self.fs = LocalFileSystem()
 
     def handle(self, _id, request):
         '""Handle the request from language client.""'
