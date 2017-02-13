@@ -93,6 +93,7 @@ def step_impl(context):
 
 @when('I write a response to the JSONRPC2Connection')
 def step_impl(context):
+    # BUG: when id = 0
     context.ID = 1
     context.jsonConn.write_response(context.ID, {
         'mock': 'mock'

@@ -39,13 +39,13 @@ class LangServer(JSONRPC2Connection):
 
         if request['method'] == 'initialize':
             resp = self.serve_initialize(request)
-        # TODO: Support didChange.
+        # TODO: Support did_change and did_change_watched_files.
         # elif request["method"] == "textDocument/didChange":
         #     resp = self.serve_change(request)
         # elif request["method"] == "workspace/didChangeWatchedFiles":
         #     resp = self.serve_did_change_watched_files(request)
         elif request['method'] == 'textDocument/didSave':
-            resp = self.serve_did_save(request)
+            self.serve_did_save(request)
 
         if resp is not None:
             self.write_response(request['id'], resp)
@@ -72,27 +72,27 @@ class LangServer(JSONRPC2Connection):
         diagnostics = output_to_diagnostics(
             run_coala_with_specific_file(self.root_path, path))
         self.send_diagnostics(path, diagnostics)
-        return None
 
-    def serve_change(self, request):
-        '""Serve for the request of documentation changed.""'
-        params = request['params']
-        uri = params['textDocument']['uri']
-        path = path_from_uri(uri)
-        diagnostics = output_to_diagnostics(
-            run_coala_with_specific_file(self.root_path, path))
-        self.send_diagnostics(path, diagnostics)
-        return None
-
-    def serve_did_change_watched_files(self, request):
-        '""Serve for thr workspace/didChangeWatchedFiles request.""'
-        changes = request['changes']
-        for fileEvent in changes:
-            uri = fileEvent['uri']
-            path = path_from_uri(uri)
-            diagnostics = output_to_diagnostics(
-                run_coala_with_specific_file(self.root_path, path))
-            self.send_diagnostics(path, diagnostics)
+    # TODO: Support did_change and did_change_watched_files.
+    # def serve_change(self, request):
+    #     '""Serve for the request of documentation changed.""'
+    #     params = request['params']
+    #     uri = params['textDocument']['uri']
+    #     path = path_from_uri(uri)
+    #     diagnostics = output_to_diagnostics(
+    #         run_coala_with_specific_file(self.root_path, path))
+    #     self.send_diagnostics(path, diagnostics)
+    #     return None
+    #
+    # def serve_did_change_watched_files(self, request):
+    #     '""Serve for thr workspace/didChangeWatchedFiles request.""'
+    #     changes = request['changes']
+    #     for fileEvent in changes:
+    #         uri = fileEvent['uri']
+    #         path = path_from_uri(uri)
+    #         diagnostics = output_to_diagnostics(
+    #             run_coala_with_specific_file(self.root_path, path))
+    #         self.send_diagnostics(path, diagnostics)
 
     def send_diagnostics(self, path, diagnostics):
         _diagnostics = []
