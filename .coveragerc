@@ -1,6 +1,9 @@
 [run]
 branch = True
 source = .
+omit =
+    coala-langserver.py
+    tests/*
 
 [report]
 exclude_lines =
@@ -8,7 +11,6 @@ exclude_lines =
     pass
     pragma: no cover
     raise NotImplementedError
+    def main
     if __name__ == .__main__.:
 ignore_errors = True
-omit =
-    tests/*
