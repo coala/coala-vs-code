@@ -46,6 +46,9 @@ install:
   - cd - > /dev/null
 
 script:
+  - >
+  # https://github.com/coala/coala-bears/issues/1037
+  - sed -i.bak '/bears = GitCommitBear/d' .coafile
   # Server side tests.
   - coverage run $(which behave) ./tests/server.features
 #  # Integration tests.

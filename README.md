@@ -1,5 +1,8 @@
 # coala-vs-code
 
+[![Build Status](https://travis-ci.org/coala/coala-vs-code.svg?branch=master)](https://travis-ci.org/coala/coala-vs-code)
+[![codecov](https://codecov.io/gh/coala/coala-vs-code/branch/master/graph/badge.svg)](https://codecov.io/gh/coala/coala-vs-code)
+
 A visual studio code plugin working via [Language Server Protocol (LSP)](https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md).Python versions 3.x is supported.
 
 ## Feature preview
