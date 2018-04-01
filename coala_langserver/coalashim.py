@@ -9,7 +9,7 @@ from .log import log
 
 
 def run_coala_with_specific_file(working_dir, file):
-    sys.argv = ['', '--json', '--find-config', '--files', file]
+    sys.argv = ['', '--json', '--find-config', '--limit-files', file]
     if working_dir is None:
         working_dir = '.'
     os.chdir(working_dir)
