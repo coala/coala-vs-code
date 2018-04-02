@@ -10,7 +10,12 @@ def output_to_diagnostics(output):
     for key, problems in output_json.items():
         section = key
         for problem in problems:
-            severity = problem['severity']
+            """
+            Transform RESULT_SEVERITY of coala into DiagnosticSeverity of LSP
+            coala: INFO = 0, NORMAL = 1, MAJOR = 2
+            LSP: Error = 1, Warning = 2, Information = 3, Hint = 4
+            """
+            severity = 3 - problem['severity']
             message = problem['message']
             origin = problem['origin']
             real_message = '[{}] {}: {}'.format(section, origin, message)
