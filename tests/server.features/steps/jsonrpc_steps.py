@@ -7,101 +7,122 @@
 import tempfile
 import json
 from behave import given, when, then
-from coala_langserver.jsonrpc import ReadWriter, TCPReadWriter, JSONRPC2Connection
+from pyls.jsonrpc import streams
+from pyls.jsonrpc import endpoint
+from pyls.jsonrpc import dispatchers
 
 
-@given('the string')
+def issimilar(dicta, dictb):
+    """
+    Return bool indicating if dicta is deeply similar to dictb.
+    """
+    # slow but safe for deeper evaluation
+    return json.dumps(dicta) == json.dumps(dictb)
+
+
+@given('the message')
 def step_impl(context):
-    context.str = 'test-cases'
+    context.message = {
+        'simple': 'test',
+    }
 
 
-@when('I write it to ReadWriter')
+@when('I write it to JsonRpcStreamWriter')
 def step_impl(context):
-    context.f = tempfile.TemporaryFile(mode='w+')
-    context.readWriter = ReadWriter(context.f, context.f)
-    context.readWriter.write(context.str)
+    context.f = tempfile.TemporaryFile(mode='w+b')
+    context.writer = streams.JsonRpcStreamWriter(context.f)
+    context.writer.write(context.message)
 
 
-@then('it should read from ReadWriter')
+@then('it should read from JsonRpcStreamReader')
 def step_impl(context):
     context.f.seek(0)
-    assert context.readWriter.read(len(context.str)) is not ''
-    context.f.close()
+    context._passed = False
+
+    def consumer(message):
+        assert issimilar(context.message, message)
+        context._passed = True
+        context.writer.close()
+
+    reader = streams.JsonRpcStreamReader(context.f)
+    reader.listen(consumer)
+    reader.close()
+
+    if not context._passed:
+        assert False
 
 
-@then('it should readline from ReadWriter')
+@given('a notification type rpc request')
 def step_impl(context):
-    context.f.seek(0)
-    assert context.readWriter.readline() is not ''
-    context.f.close()
+    context.request = {
+        'jsonrpc': '2.0',
+        'method': 'math/add',
+        'params': {
+            'a': 1,
+            'b': 2,
+        },
+    }
 
 
-@when('I write it to TCPReadWriter')
+@when('I send rpc request using JsonRpcStreamWriter')
 def step_impl(context):
     context.f = tempfile.TemporaryFile()
-    context.readWriter = TCPReadWriter(context.f, context.f)
-    context.readWriter.write(context.str)
+    context.writer = streams.JsonRpcStreamWriter(context.f)
+    context.writer.write(context.request)
 
 
-@then('it should read from TCPReadWriter')
+@then('it should invoke the notification consumer with args')
 def step_impl(context):
     context.f.seek(0)
-    assert context.readWriter.read(len(context.str)) is not ''
-    context.f.close()
+    context._passed = False
+
+    class Example(dispatchers.MethodDispatcher):
+
+        def m_math__add(self, a, b):
+            context.writer.close()
+            context._passed = True
+
+    epoint = endpoint.Endpoint(Example(), None)
+    reader = streams.JsonRpcStreamReader(context.f)
+    reader.listen(epoint.consume)
+    reader.close()
+
+    if not context._passed:
+        assert False
 
 
-@then('it should readline from TCPReadWriter')
+@given('a request type rpc request')
+def step_impl(context):
+    context.request = {
+        'jsonrpc': '2.0',
+        'id': 2148,
+        'method': 'math/add',
+        'params': {
+            'a': 1,
+            'b': 2,
+        },
+    }
+
+
+@then('it should invoke consumer and return response')
 def step_impl(context):
     context.f.seek(0)
-    assert context.readWriter.readline() is not ''
-    context.f.close()
+    context._passed = False
 
+    class Example(dispatchers.MethodDispatcher):
 
-@given('the JSONRPC2Connection instance')
-def step_impl(context):
-    context.f = tempfile.TemporaryFile()
-    context.jsonConn = JSONRPC2Connection(conn=TCPReadWriter(context.f, context.f))
+        def m_math__add(self, a, b):
+            return a + b
 
+    def consumer(message):
+        assert message['result'] == sum(context.request['params'].values())
+        context.writer.close()
+        context._passed = True
 
-@when('I write a request to the JSONRPC2Connection with id')
-def step_impl(context):
-    context.jsonConn.send_request('mockMethod', {
-        'mock': 'mock'
-    })
+    epoint = endpoint.Endpoint(Example(), consumer)
+    reader = streams.JsonRpcStreamReader(context.f)
+    reader.listen(epoint.consume)
+    reader.close()
 
-
-@then('it should return the request from JSONRPC2Connection with id')
-def step_impl(context):
-    context.f.seek(0)
-    assert context.jsonConn.read_message() is not None
-    context.f.close()
-
-
-@when('I write a notification to the JSONRPC2Connection')
-def step_impl(context):
-    context.jsonConn.send_notification('mockMethod', {
-        'mock': 'mock'
-    })
-
-
-@then('it should return the notification from JSONRPC2Connection')
-def step_impl(context):
-    context.f.seek(0)
-    assert context.jsonConn.read_message() is not None
-    context.f.close()
-
-
-@when('I write a response to the JSONRPC2Connection')
-def step_impl(context):
-    # BUG: when id = 0
-    context.ID = 1
-    context.jsonConn.write_response(context.ID, {
-        'mock': 'mock'
-    })
-
-
-@then('it should return the response from JSONRPC2Connection')
-def step_impl(context):
-    context.f.seek(0)
-    assert context.jsonConn.read_message(context.ID) is not None
-    context.f.close()
+    if not context._passed:
+        assert False

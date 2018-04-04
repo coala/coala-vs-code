@@ -1,35 +1,20 @@
 Feature: jsonrpc module
   jsonrpc is a module of language-server.
 
-  Scenario: Test ReadWriter
-    Given the string
-    When I write it to ReadWriter
-    Then it should read from ReadWriter
+  Scenario: Test JsonRpcStreamWriter and JsonRpcStreamReader
+    Given the message
+    When I write it to JsonRpcStreamWriter
+    Then it should read from JsonRpcStreamReader
 
-  Scenario: Test ReadWriter
-    Given the string
-    When I write it to ReadWriter
-    Then it should readline from ReadWriter
+  Scenario: Test notification and disptacher
+    Given a notification type rpc request
+    When I send rpc request using JsonRpcStreamWriter
+    Then it should invoke the notification consumer with args
 
-  Scenario: Test TCPReadWriter
-    Given the string
-    When I write it to TCPReadWriter
-    Then it should read from TCPReadWriter
-
-  Scenario: Test TCPReadWriter
-    Given the string
-    When I write it to TCPReadWriter
-    Then it should readline from TCPReadWriter
-
-  Scenario: Test send_notification and read_message
-    Given the JSONRPC2Connection instance
-    When I write a notification to the JSONRPC2Connection
-    Then it should return the notification from JSONRPC2Connection
-
-  Scenario: Test write_response
-    Given the JSONRPC2Connection instance
-    When I write a response to the JSONRPC2Connection
-    Then it should return the response from JSONRPC2Connection
+  Scenario: Test rpc request and response
+    Given a request type rpc request
+    When I send rpc request using JsonRpcStreamWriter
+    Then it should invoke consumer and return response
 
   # TODO: block until we have generantee the unique request.
 #  Scenario: Test send_request
