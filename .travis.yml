@@ -52,7 +52,8 @@ script:
   - sed -i.bak '/bears = GitCommitBear/d' .coafile
   # Server side tests.
   - coverage run $(which behave) ./tests/server.features
-#  # Integration tests.
+  - coverage run -a -m unittest discover -s tests
+  # Frontend tests.
 #  - cd ./vscode-client
 #  - npm test
 #  - cd - > /dev/null
