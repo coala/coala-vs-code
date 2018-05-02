@@ -50,6 +50,11 @@ script:
 #  - npm test
 #  - cd - > /dev/null
 
+notifications:
+  email: false
+  webhooks: https://www.travisbuddy.com/
+  on_success: never
+
 after_success:
   - codecov
 #  # If the build was triggered by a tag, publish the new version
