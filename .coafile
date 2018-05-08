@@ -14,7 +14,9 @@ language = python
 preferred_quotation = '
 
 [autopep8]
-bears = PEP8Bear, PycodestyleBear
+bears = PEP8Bear, PycodestyleBear, PyDocStyleBear
+pydocstyle_ignore = D100, D101, D102, D103, D104, D107,
+  D200, D203, D205, D209, D212, D213, D400
 
 [linelength]  # Sometimes autopep8 makes too long lines, need to check after!
 bears = LineLengthBear
