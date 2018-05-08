@@ -26,14 +26,18 @@ class LangserverTCPTransport(socketserver.StreamRequestHandler):
 
 
 class LangServer(JSONRPC2Connection):
-    '""Language server for coala base on JSON RPC.""'
+    """
+    Language server for coala base on JSON RPC.
+    """
 
     def __init__(self, conn=None):
         super().__init__(conn=conn)
         self.root_path = None
 
     def handle(self, _id, request):
-        '""Handle the request from language client.""'
+        """
+        Handle the request from language client.
+        """
         log('REQUEST: ', request)
         resp = None
 
@@ -51,7 +55,9 @@ class LangServer(JSONRPC2Connection):
             self.write_response(request['id'], resp)
 
     def serve_initialize(self, request):
-        '""Serve for the initialization request.""'
+        """
+        Serve for the initialization request.
+        """
         params = request['params']
         # Notice that the root_path could be None.
         if 'rootUri' in params:
@@ -65,7 +71,9 @@ class LangServer(JSONRPC2Connection):
         }
 
     def serve_did_save(self, request):
-        '""Serve for did_change request.""'
+        """
+        Serve for did_change request.
+        """
         params = request['params']
         uri = params['textDocument']['uri']
         path = path_from_uri(uri)

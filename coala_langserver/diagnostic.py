@@ -2,7 +2,9 @@ import json
 
 
 def output_to_diagnostics(output):
-    '""Turn output to diagnstics.""'
+    """
+    Turn output to diagnstics.
+    """
     if output is None:
         return None
     output_json = json.loads(output)['results']
