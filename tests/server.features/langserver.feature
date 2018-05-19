@@ -14,22 +14,22 @@ Feature: langserver module
   Scenario: Test send_diagnostics
     Given the LangServer instance
     When I invoke send_diagnostics message
-    Then it should send a publishDiagnostics request
+    Then I should receive a publishDiagnostics type response
 
   Scenario: Test negative m_text_document__did_save
     Given the LangServer instance
     When I send a did_save request about a non-existed file to the server
-    Then it should send a publishDiagnostics request
+    Then I should receive a publishDiagnostics type response
 
   Scenario: Test positive m_text_document__did_save
     Given the LangServer instance
     When I send a did_save request about a existing file to the server
-    Then it should send a publishDiagnostics request
+    Then I should receive a publishDiagnostics type response
 
   Scenario: Test when coafile is missing
     Given the LangServer instance
     When I send a did_save request on a file with no coafile to server
-    Then it should send a publishDiagnostics request
+    Then I should receive a publishDiagnostics type response
 
   Scenario: Test didChange
     Given the LangServer instance

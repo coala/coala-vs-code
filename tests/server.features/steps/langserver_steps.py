@@ -132,7 +132,7 @@ def step_impl(context):
     context._diagCount = 0
 
 
-@then('it should send a publishDiagnostics request')
+@then('I should receive a publishDiagnostics type response')
 def step_impl(context):
     context.f.seek(0)
     context._passed = False
