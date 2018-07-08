@@ -4,7 +4,7 @@
     "description": "Provides a unified interface for linting and fixing all your code, regardless of the programming languages you use.",
     "author": "coala devs",
     "license": "MIT",
-    "version": "0.0.10",
+    "version": "0.0.20",
     "publisher": "coala",
     "engines": {
         "vscode": "^1.4.0"
