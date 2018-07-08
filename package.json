@@ -31,5 +31,23 @@
     },
     "dependencies": {
         "vscode-languageclient": "^2.4.2-next.12"
+    },
+    "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "coala-ls configuration",
+            "properties": {
+                "coalals.maxWorkers": {
+                    "type": "number",
+                    "default": 2,
+                    "description": "Number of max workers per server instance."
+                },
+                "coalals.tcpPort": {
+                    "type": "number",
+                    "default": 2087,
+                    "description": "Language Server port in TCP mode."
+                }
+            }
+        }
     }
 }

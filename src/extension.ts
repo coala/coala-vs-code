@@ -3,7 +3,12 @@
 import * as net from 'net';
 import { resolve, } from 'path';
 
-import { Disposable, ExtensionContext, workspace } from 'vscode';
+import {
+    Disposable,
+    ExtensionContext,
+    workspace,
+    WorkspaceConfiguration,
+} from 'vscode';
 import {
     CloseAction,
     ErrorAction,
@@ -26,11 +31,26 @@ const coalals = {
     ],
 };
 
+function getSettings(): { [id: string]: number; } {
+    const config: WorkspaceConfiguration = workspace.getConfiguration(
+                                            'coalals');
+
+    return {
+        maxWorkers: Number(config.get('maxWorkers')),
+        tcpPort: Number(config.get('tcpPort')),
+    };
+}
+
 function startLangServer(
     command: string,
-    documentSelector: string | string[]
+    documentSelector: string | string[],
+    maxWorkers: number
 ): Disposable {
     const serverOptions: ServerOptions = {
+        args: [
+            '--max-workers',
+            String(maxWorkers),
+        ],
         command: command,
     };
     const clientOptions: LanguageClientOptions = {
@@ -77,17 +97,23 @@ function startLangServerTCP(
 
 export function activate(context: ExtensionContext) {
     const debug: boolean = false;
+    const {
+        tcpPort,
+        maxWorkers,
+    } = getSettings();
 
     if (!debug) {
         context.subscriptions.push(
             startLangServer(
                 coalals.command.usage,
-                coalals.langs
+                coalals.langs,
+                maxWorkers
             )
         );
     } else {
         // For Debug
-        context.subscriptions.push(startLangServerTCP(2087, coalals.langs));
+        context.subscriptions.push(
+            startLangServerTCP(tcpPort, coalals.langs));
     }
 
     console.log('coala language server is running.');
