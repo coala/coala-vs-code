@@ -1,0 +1,21 @@
+defaultSeverity: error
+extends:
+  - "tslint:recommended"
+rules:
+  no-console: false
+  no-shadowed-variable: false
+  no-var-requires: false
+  object-literal-shorthand: false
+  trailing-comma:
+    - true
+    - |
+      esSpecCompliant: true
+      multiline:
+        arrays: always
+        functions: never
+        objects: always
+        typeLiterals: ignore
+  quotemark: [true, "single"]
+linterOptions:
+  exclude:
+    - test/index.ts
