@@ -76,13 +76,19 @@ function startLangServerTCP(
 }
 
 export function activate(context: ExtensionContext) {
-    context.subscriptions.push(
-        startLangServer(
-            coalals.command.usage,
-            coalals.langs
-        )
-    );
-    // For Debug
-    // context.subscriptions.push(startLangServerTCP(2087, coalals.langs));
+    const debug: boolean = false;
+
+    if (!debug) {
+        context.subscriptions.push(
+            startLangServer(
+                coalals.command.usage,
+                coalals.langs
+            )
+        );
+    } else {
+        // For Debug
+        context.subscriptions.push(startLangServerTCP(2087, coalals.langs));
+    }
+
     console.log('coala language server is running.');
 }
