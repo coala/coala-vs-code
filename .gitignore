@@ -268,6 +268,9 @@ tags
 .idea/**/dictionaries
 .idea/**/shelf
 
+# Generated files
+.idea/**/contentModel.xml
+
 # Sensitive or high-churn files
 .idea/**/dataSources/
 .idea/**/dataSources.ids
@@ -280,6 +283,14 @@ tags
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
+
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
 
 # CMake
 cmake-build-*/
@@ -470,9 +481,14 @@ cscope.in.out
 cscope.po.out
 
 
-# Patch & backup files
-*.patch
+*.bak
+*.gho
+*.ori
 *.orig
+*.tmp
+*.orig
+*.rej
+*.patch
 *.diff
 
 # Pytest profile files
