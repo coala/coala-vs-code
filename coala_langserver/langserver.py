@@ -1,7 +1,6 @@
 import sys
 import argparse
 import socketserver
-import traceback
 
 from pyls.jsonrpc.endpoint import Endpoint
 from pyls.jsonrpc.dispatchers import MethodDispatcher
