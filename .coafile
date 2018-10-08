@@ -1,0 +1,3 @@
+[markdown]
+bears = MarkdownBear
+files = *.md
